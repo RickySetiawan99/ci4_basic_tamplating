@@ -17,27 +17,33 @@
     color: var(--blue-secondary) !important;
 }
 /* sidebar */
-.navbar-vertical.navbar-expand-xs .navbar-collapse{
+.navbar-vertical.navbar-expand-xs .navbar-collapse {
     height: calc(100vh - 150px) !important;
 }
-.navbar-vertical.bg-white .navbar-nav>.nav-item .nav-link.active{
+
+.navbar-vertical.bg-white .navbar-nav > .nav-item > .nav-link.active,
+.navbar-vertical.bg-white .navbar-nav > .nav-item > .nav-link:hover {
     background-color: var(--blue-primary) !important;
     color: white;
+    border-radius: 0.5rem; /* Consistent rounded corners */
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
 }
-.navbar-vertical.bg-white .navbar-nav>.nav-item .nav-link:hover{
-    background-color: var(--blue-primary) !important;
-    border-radius: 0.5rem;
+
+/* Additional styles for ensuring no sharp borders */
+.navbar-vertical.bg-white .navbar-nav > .nav-item > .nav-link {
+    border-radius: 0.5rem; /* Default rounded corners */
+}
+
+.navbar-vertical.navbar-expand-xs .navbar-nav > .nav-item > .nav-link.active .icon .ni,
+.navbar-vertical.navbar-expand-xs .navbar-nav > .nav-item > .nav-link.active .icon .fa {
     color: white;
 }
-.navbar-vertical.navbar-expand-xs .navbar-nav>.nav-item .nav-link.active .icon .ni,
-.navbar-vertical.navbar-expand-xs .navbar-nav>.nav-item .nav-link.active .icon .fa{
+
+.navbar-vertical.navbar-expand-xs .navbar-nav > .nav-item > .nav-link:hover .icon .ni,
+.navbar-vertical.navbar-expand-xs .navbar-nav > .nav-item > .nav-link:hover .icon .fa {
     color: white;
 }
-.navbar-vertical.navbar-expand-xs .navbar-nav>.nav-item .nav-link:hover .icon .ni,
-.navbar-vertical.navbar-expand-xs .navbar-nav>.nav-item .nav-link:hover .icon .fa
-{
-    color: white;
-}
+
 .icon .ni{
     color: #000;
 }
