@@ -50,25 +50,25 @@ class UserMenuSeeder extends Seeder
 
         // Role
         $this->authorize->createGroup('admin', 'Administrators. The top of the food chain.');
-        $this->authorize->createGroup('member', 'Member everyday member.');
+        $this->authorize->createGroup('user', 'User everyday user.');
 
         // Permission
         $this->authorize->createPermission('back-office', 'User can access to the administration panel.');
         $this->authorize->createPermission('manage-user', 'User can create, delete or modify the users.');
         $this->authorize->createPermission('role-permission', 'User can edit and define permissions for a role.');
-        $this->authorize->createPermission('menu-permission', 'User cand create, delete or modify the menu.');
+        $this->authorize->createPermission('menu-permission', 'User can create, delete or modify the menu.');
 
         // Assign Permission to role
         $this->authorize->addPermissionToGroup('back-office', 'admin');
         $this->authorize->addPermissionToGroup('manage-user', 'admin');
         $this->authorize->addPermissionToGroup('role-permission', 'admin');
         $this->authorize->addPermissionToGroup('menu-permission', 'admin');
-        $this->authorize->addPermissionToGroup('back-office', 'member');
+        $this->authorize->addPermissionToGroup('back-office', 'user');
 
         // Assign Role to user
         $this->authorize->addUserToGroup(1, 'admin');
-        $this->authorize->addUserToGroup(1, 'member');
-        $this->authorize->addUserToGroup(2, 'member');
+        $this->authorize->addUserToGroup(1, 'user');
+        $this->authorize->addUserToGroup(2, 'user');
 
         // Assign Permission to user
         $this->authorize->addPermissionToUser('back-office', 1);
@@ -100,7 +100,7 @@ class UserMenuSeeder extends Seeder
                 'parent_id'  => '2',
                 'title'      => 'User Profile',
                 'icon'       => 'fas fa-user-edit',
-                'route'      => 'admin/user/profile',
+                'route'      => 'user_management/profile',
                 'sequence'   => '3',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
@@ -109,7 +109,7 @@ class UserMenuSeeder extends Seeder
                 'parent_id'  => '2',
                 'title'      => 'Users',
                 'icon'       => 'fas fa-users',
-                'route'      => 'admin/user/manage',
+                'route'      => 'user_management/users',
                 'sequence'   => '4',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
@@ -118,7 +118,7 @@ class UserMenuSeeder extends Seeder
                 'parent_id'  => '2',
                 'title'      => 'Permissions',
                 'icon'       => 'fas fa-user-lock',
-                'route'      => 'admin/permission',
+                'route'      => 'user_management/permissions',
                 'sequence'   => '5',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
@@ -127,7 +127,7 @@ class UserMenuSeeder extends Seeder
                 'parent_id'  => '2',
                 'title'      => 'Roles',
                 'icon'       => 'fas fa-users-cog',
-                'route'      => 'admin/role',
+                'route'      => 'user_management/roles',
                 'sequence'   => '6',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
@@ -136,7 +136,7 @@ class UserMenuSeeder extends Seeder
                 'parent_id'  => '2',
                 'title'      => 'Menu',
                 'icon'       => 'fas fa-stream',
-                'route'      => 'admin/menu',
+                'route'      => 'user_management/menus',
                 'sequence'   => '7',
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
