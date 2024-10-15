@@ -5,7 +5,7 @@
 <?php endif ?>
 
 <?php if (session()->has('error')) : ?>
-	<div class="alert alert-danger">
+	<div class="alert alert-danger text-white">
 		<?= session('error') ?>
 	</div>
 <?php endif ?>
