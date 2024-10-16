@@ -19,10 +19,12 @@
     <link rel="stylesheet" href="<?= base_url('assets') ?>/css/custom.css?v=3">
     <link rel="stylesheet" href="<?= base_url('assets') ?>/css/custom-select2.css?v=3">
 
-    <!-- <link type="text/css" href="<?= base_url('assets') ?>/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet"> -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link type="text/css" href="<?= base_url('assets') ?>/plugins/select2-develop/dist/css/select2.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <!-- duallistbox -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap4-duallistbox/4.0.2/bootstrap-duallistbox.min.css">
 
     </head>
 
@@ -38,25 +40,20 @@
 
         <!-- End Navbar -->
         <div class="container-fluid pb-4">
-             <!-- content -->
+            <!-- content -->
             <?= $this->renderSection('content') ?>
             
             <?= $this->include('layouts/components/footer') ?>
         </div>
     </main>
     <!-- @include('layouts.component.argon_configuration') -->
-    <?php if (session()->has('alert.config')): ?>
-        <script>
-            Swal.fire(<?= session()->get('alert.config') ?>);
-        </script>
-        <?php session()->remove('alert.config'); ?>
-    <?php endif; ?>
     <!--   Core JS Files   -->
     <script src="<?= base_url('assets') ?>/js/core/popper.min.js"></script>
     <script src="<?= base_url('assets') ?>/js/core/bootstrap.min.js"></script>
     <script src="<?= base_url('assets') ?>/js/plugins/perfect-scrollbar.min.js"></script>
     <script src="<?= base_url('assets') ?>/js/plugins/smooth-scrollbar.min.js"></script>
     <script src="<?= base_url('assets') ?>/js/plugins/chartjs.min.js"></script>
+    <!-- extend script -->
     <script>
         var ctx1 = document.getElementById("chart-line").getContext("2d");
 
@@ -139,8 +136,7 @@
             },
         },
         });
-    </script>
-    <script>
+
         var win = navigator.platform.indexOf('Win') > -1;
         if (win && document.querySelector('#sidenav-scrollbar')) {
         var options = {
@@ -148,22 +144,47 @@
         }
         Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
         }
+
+        
+
+    </script>
+    <script>
+        // Store flash messages in sessionStorage for the toast notifications
+        <?php if (session()->has('success')): ?>
+            sessionStorage.setItem('success', '<?= session('success') ?>');
+        <?php endif; ?>
+
+        <?php if (session()->has('error')): ?>
+            <?php
+                $error = session('error');
+                if (is_array($error)) {
+                    $errorMessage = parsingAlert($error);
+                } else {
+                    $errorMessage = $error;
+                }
+            ?>
+            sessionStorage.setItem('error', <?= json_encode($errorMessage) ?>);
+        <?php endif; ?>
+
+        <?php if (session()->has('warning')): ?>
+            sessionStorage.setItem('warning', '<?= session('warning') ?>');
+        <?php endif; ?>
+        //end flash msg
     </script>
     <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="<?= base_url('assets') ?>/js/argon-dashboard.min.js?v=2.0.4"></script>
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- <script src="<?= base_url('assets') ?>/vendor/datatables/jquery.dataTables.min.js"></script>
-    <script src="<?= base_url('assets') ?>/vendor/datatables/dataTables.bootstrap4.min.js"></script> -->
-    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
-    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
     <script src="<?= base_url('assets') ?>/plugins/select2-develop/dist/js/select2.full.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="<?= base_url('assets') ?>/js/custom.js"></script>
     <script src="<?= base_url('assets') ?>/js/basic-select2.js"></script>
     <script src="<?= base_url('assets') ?>/js/basic-flatpickr.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap4-duallistbox/4.0.2/jquery.bootstrap-duallistbox.min.js"></script>
     <?= $this->renderSection('js') ?>
 </body>
 

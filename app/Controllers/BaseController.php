@@ -2,11 +2,13 @@
 
 namespace App\Controllers;
 
+use CodeIgniter\Config\Services;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\IncomingRequest;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
+use Config\Database;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -28,6 +30,21 @@ abstract class BaseController extends Controller
      */
     protected $request;
 
+     /**
+     * @var \Myth\Auth\Authorization\FlatAuthorization
+     */
+    protected $authorize;
+
+    /**
+     * @var \Myth\Auth\Authentication\LocalAuthenticator
+     */
+    protected $auth;
+
+    /**
+     * @var \CodeIgniter\Database\BaseConnection|\CodeIgniter\Database\BaseBuilder
+     */
+    protected $db;
+
     /**
      * An array of helpers to be loaded automatically upon
      * class instantiation. These helpers will be available
@@ -35,7 +52,7 @@ abstract class BaseController extends Controller
      *
      * @var list<string>
      */
-    protected $helpers = [];
+    protected $helpers = ['hashid', 'auth', 'menu', 'custom'];
 
     /**
      * Be sure to declare properties for any property fetch you initialized.
@@ -54,5 +71,8 @@ abstract class BaseController extends Controller
         // Preload any models, libraries, etc, here.
 
         // E.g.: $this->session = \Config\Services::session();
+        $this->auth = Services::authentication();
+        $this->authorize = Services::authorization();
+        $this->db = Database::connect();
     }
 }
