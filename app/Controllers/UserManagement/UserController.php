@@ -65,16 +65,16 @@ class UserController extends BaseController
         $data = $users->limit($length, $start)->get()->getResultArray();
 
         $formattedData = [];
-        foreach ($data as $index => $user) {
+        foreach ($data as $key => $value) {
             // Tambahkan nomor urut (index + 1 + $start) untuk memperhitungkan pagination
-            $btnEdit    = '<a href="' . site_url($this->route.'/edit/' . encode_id($user['id'])) . '" class="btn btn-sm btn-primary mx-1">Edit</a>';
-            $btnDelete  = '<a href="javascript:;" data-route="' . site_url($this->route.'/destroy/' . encode_id($user['id'])) . '" class="btn btn-delete btn-sm btn-danger mx-1" data-bs-toggle="tooltip" title="Hapus" data-container="body" data-animation="true">Delete</a>';
+            $btnEdit    = '<a href="' . site_url($this->route.'/edit/' . encode_id($value['id'])) . '" class="btn btn-md btn-primary mx-1" data-bs-toggle="tooltip" title="Edit"><i class="fas fa-pencil-alt"></i></a>';
+            $btnDelete  = '<a href="javascript:;" data-route="' . site_url($this->route.'/destroy/' . encode_id($value['id'])) . '" class="btn btn-delete btn-md btn-danger mx-1" data-bs-toggle="tooltip" title="Delete" data-container="body" data-animation="true"><i class="fas fa-trash"></i></a>';
             
             $formattedData[] = [
-                'no'            => $start + $index + 1, // Nomor urut
-                'username'      => $user['username'],
-                'email'         => $user['email'],
-                'created_at'    => $user['created_at'],
+                'no'            => $start + $key + 1, // Nomor urut
+                'username'      => $value['username'],
+                'email'         => $value['email'],
+                'created_at'    => $value['created_at'],
                 'action'        => $btnEdit.$btnDelete
             ];
         }

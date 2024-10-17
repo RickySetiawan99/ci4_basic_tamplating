@@ -1,5 +1,7 @@
 <?php
 
+use Myth\Auth\Models\PermissionModel;
+
 if (!function_exists('parsingAlert')) {
     function parsingAlert($message)
     {
@@ -16,5 +18,33 @@ if (!function_exists('parsingAlert')) {
         $string .= '</ul>'; // Close the unordered list
 
         return $string;
+    }
+}
+
+if (!function_exists('hasPermission')) {
+    /**
+     * Mengecek apakah user punya permission yang diperlukan
+     *
+     * @param string $permission
+     * @return bool
+     */
+    function hasPermission($permission)
+    {
+        // Mendapatkan ID user yang sedang login
+        $userId = user_id(); // Function dari Myth\Auth untuk mendapatkan user ID
+
+        // Cek jika user tidak ada
+        if (is_null($userId)) {
+            return false;
+        }
+
+        // Dapatkan permission model
+        $permissionModel = new PermissionModel();
+        
+        // Ambil permission yang dimiliki user
+        $userPermissions = $permissionModel->getPermissionsForUser($userId);
+
+        // Cek apakah permission yang diminta ada dalam daftar permission user
+        return in_array($permission, $userPermissions);
     }
 }

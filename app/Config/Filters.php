@@ -35,6 +35,7 @@ class Filters extends BaseFilters
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
         'auth'          => \Myth\Auth\Filters\LoginFilter::class,
+        'permission'    => \App\Filters\PermissionFilter::class,
     ];
 
     /**

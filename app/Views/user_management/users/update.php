@@ -35,7 +35,7 @@
                                 <input type="email" name="email" class="form-control <?= session('error.email') ? 'is-invalid' : '' ?>" value="<?= $user->email ?>" placeholder="example@mail.com" autocomplete="off">
                                 <?php if (session('error.email')) { ?>
                                     <div class="invalid-feedback text-xs">
-                                        <h6><?= session('error.email') ?></h6>
+                                        <h6 class="text-danger text-xs"><?= session('error.email') ?></h6>
                                     </div>
                                 <?php } ?>
                             </div>
@@ -44,7 +44,7 @@
                                 <input type="text" name="username" class="form-control <?= session('error.username') ? 'is-invalid' : '' ?>" value="<?= $user->username ?>" placeholder="Username" autocomplete="off">
                                 <?php if (session('error.username')) { ?>
                                     <div class="invalid-feedback text-xs">
-                                        <h6><?= session('error.username') ?></h6>
+                                        <h6 class="text-danger text-xs"><?= session('error.username') ?></h6>
                                     </div>
                                 <?php } ?>
                             </div>
@@ -53,7 +53,7 @@
                                 <input type="password" name="password" class="form-control <?= session('error.password') ? 'is-invalid' : '' ?>" placeholder="Password" autocomplete="off">
                                 <?php if (session('error.password')) { ?>
                                     <div class="invalid-feedback text-xs">
-                                        <h6><?= session('error.password') ?></h6>
+                                        <h6 class="text-danger text-xs"><?= session('error.password') ?></h6>
                                     </div>
                                 <?php } ?>
                             </div>
@@ -62,7 +62,7 @@
                                 <input type="password" name="pass_confirm" class="form-control <?= session('error.pass_confirm') ? 'is-invalid' : '' ?>" placeholder="Password" autocomplete="off">
                                 <?php if (session('error.pass_confirm')) { ?>
                                     <div class="invalid-feedback text-xs">
-                                        <h6><?= session('error.pass_confirm') ?></h6>
+                                        <h6 class="text-danger text-xs"><?= session('error.pass_confirm') ?></h6>
                                     </div>
                                 <?php } ?>
                             </div>

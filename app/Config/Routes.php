@@ -34,5 +34,23 @@ $routes->group('user-management',
                 $routes->post('update/(:segment)', 'UserController::update/$1');
             }
         );
+
+        $routes->group('permissions', [
+            'filter'    => 'permission',
+            'namespace' => 'App\Controllers\UserManagement',
+        ], function ($routes) {
+            $routes->get('/', 'PermissionController::index');
+            $routes->post('fetchData', 'PermissionController::fetchData');
+            $routes->get('create', 'PermissionController::create');
+            $routes->get('edit/(:segment)', 'PermissionController::edit/$1');
+            $routes->get('destroy/(:segment)', 'PermissionController::destroy/$1');
+            
+            $routes->post('store', 'PermissionController::store');
+            $routes->post('update/(:segment)', 'PermissionController::update/$1');
+        });
     }
 );
+
+$routes->get('access-denied', function() {
+    return view('layouts/403');
+});

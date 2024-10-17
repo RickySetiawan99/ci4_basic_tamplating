@@ -2,62 +2,60 @@
 
 namespace App\Filters;
 
-use CodeIgniter\Filters\FilterInterface;
-use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
-use Myth\Auth\Exceptions\PermissionException;
+use CodeIgniter\Filters\FilterInterface;
 
-class PermissionFilter extends BaseFilter implements FilterInterface
+class PermissionFilter implements FilterInterface
 {
-    /**
-     * @param array|null $arguments
-     *
-     * @return RedirectResponse|void
-     */
     public function before(RequestInterface $request, $arguments = null)
     {
-        // If no user is logged in then send them to the login form.
-        if (! $this->authenticate->check()) {
-            session()->set('redirect_url', current_url());
+        // Mengambil instance dari authentication dan router
+        $auth = service('authentication');
+        $router = service('router');
+        
+        // Mendapatkan nama method (aksi) yang diakses
+        $method = $router->methodName();
 
-            return redirect($this->reservedRoutes['login']);
+        // Ubah nama method menjadi lowercase dan pisahkan kata dengan underscore
+        $method = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $method));
+        
+        // Mendapatkan nama controller tanpa namespace
+        $controllerWithNamespace = $router->controllerName();
+        $controller = basename(str_replace('\\', '/', $controllerWithNamespace)); // Hanya ambil nama class
+        
+        // Hilangkan kata 'Controller' jika ada
+        $controller = str_replace('Controller', '', $controller);
+
+        // Ubah nama controller menjadi lowercase dan pisahkan kata dengan underscore
+        $controller = strtolower(preg_replace('/([a-z])([A-Z])/', '$1_$2', $controller));
+        
+        // Gabungkan nama controller dan method dengan format 'controller-method'
+        $permission = $controller . '-' . $method;
+
+        // Cek apakah user sudah login
+        if (!$auth->check()) {
+            return redirect()->to('/login');
         }
 
-        if (empty($arguments)) {
-            return;
-        }
-
-        $result = true;
-
-        // Check each requested permission
-        foreach ($arguments as $permission) {
-            $result = ($result && $this->authorize->hasPermission($permission, $this->authenticate->id()));
-        }
-
-        if (! $result) {
-            if ($this->authenticate->silent()) {
-                $redirectURL = session('redirect_url') ?? route_to($this->landingRoute);
-                unset($_SESSION['redirect_url']);
-
-                return redirect()->to($redirectURL)->with('error', lang('Auth.notEnoughPrivilege'));
+         // Cek apakah method memerlukan permission
+        if (class_exists($controllerWithNamespace) && method_exists($controllerWithNamespace, 'requiresPermission')) {
+            if ($controllerWithNamespace::requiresPermission($method)) {
+                // Jika memerlukan permission, cek apakah user punya permission
+                if (!hasPermission($permission)) {
+                    return redirect()->to('/access-denied'); // Atau halaman lain sesuai kebutuhan
+                }
             }
-
-            throw new PermissionException(lang('Auth.notEnoughPrivilege'));
         }
+
+        // Cek apakah filter ini ditetapkan untuk controller dan method tertentu
+        // if (!hasPermission($permission)) {
+        //     return redirect()->to('/access-denied'); // Atau halaman lain sesuai kebutuhan
+        // }
     }
 
-    /**
-     * Allows After filters to inspect and modify the response
-     * object as needed. This method does not allow any way
-     * to stop execution of other after filters, short of
-     * throwing an Exception or Error.
-     *
-     * @param array|null $arguments
-     *
-     * @return void
-     */
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)
     {
+        // Tidak diperlukan tindakan setelahnya
     }
 }

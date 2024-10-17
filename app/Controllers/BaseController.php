@@ -54,6 +54,8 @@ abstract class BaseController extends Controller
      */
     protected $helpers = ['hashid', 'auth', 'menu', 'custom'];
 
+    protected static $protectedMethods = [];
+
     /**
      * Be sure to declare properties for any property fetch you initialized.
      * The creation of dynamic property is deprecated in PHP 8.2.
@@ -74,5 +76,10 @@ abstract class BaseController extends Controller
         $this->auth = Services::authentication();
         $this->authorize = Services::authorization();
         $this->db = Database::connect();
+    }
+
+    public static function requiresPermission($method)
+    {
+        return in_array($method, static::$protectedMethods);
     }
 }
