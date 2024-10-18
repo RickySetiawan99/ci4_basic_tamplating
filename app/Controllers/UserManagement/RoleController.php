@@ -3,16 +3,16 @@
 namespace App\Controllers\UserManagement;
 
 use App\Controllers\BaseController;
-use App\Models\PermissionModel;
+use App\Models\GroupModel;
 
-class PermissionController extends BaseController
+class RoleController extends BaseController
 {
-    private $title      = 'User Management | Permission';
-    private $route      = 'user-management/permissions'; //path awal foldernya ajah (misal folder di admin/dashboard) => 'admin.dashboard'
-    private $namespace  = 'user_management/permissions/';
-    private $header     = 'Permission';
-    private $sub_header = 'Permission';
-    private $modelName  = PermissionModel::class;
+    private $title      = 'User Management | Role';
+    private $route      = 'user-management/roles'; //path awal foldernya ajah (misal folder di admin/dashboard) => 'admin.dashboard'
+    private $namespace  = 'user_management/roles/';
+    private $header     = 'Role';
+    private $sub_header = 'Role';
+    private $modelName  = GroupModel::class;
 
     protected $model;
 
@@ -42,7 +42,7 @@ class PermissionController extends BaseController
     public function fetchData()
     {
         $request = service('request');
-        $permissionModel = $this->model;
+        $roleModel = $this->model;
 
         // Ambil parameter dari inputan filter (misal: nama, email)
         $name       = $request->getPost('name');
@@ -50,7 +50,7 @@ class PermissionController extends BaseController
         $length     = (int) $request->getPost('length');
         $draw       = $request->getPost('draw');
 
-        $permissions = $permissionModel->select('id, name');
+        $permissions = $roleModel->select('id, name');
 
         $totalRecords = $permissions->countAllResults(false);
 
@@ -93,6 +93,7 @@ class PermissionController extends BaseController
             'header'        => $this->header,
             'sub_header'    => $this->sub_header,
             'route_back'    => base_url($this->route),
+            'permissions'   => $this->authorize->permissions(),
         ];
 
         return view($this->namespace.'create', $data);
@@ -101,7 +102,9 @@ class PermissionController extends BaseController
     public function store()
     {
         $validationRules = [
-            'name'       => 'required',
+            'name'        => 'required|max_length[255]|is_unique[auth_groups.name]',
+            'description' => 'required|max_length[255]',
+            'permission'  => 'required',
         ];
 
         if (!$this->validate($validationRules)) {
@@ -111,13 +114,15 @@ class PermissionController extends BaseController
         $this->db->transBegin();
 
         try {
-            // Ambil data dari request
-            $data = [
-                'name' => $this->request->getPost('name'),
-            ];
+            $name           = $this->request->getPost('name');
+            $description    = $this->request->getPost('description');
+            $permission     = $this->request->getPost('permission');
 
-            $permissionModel = $this->model;
-            $permissionModel->insert($data);
+            $id = $this->authorize->createGroup(url_title($name), $description);
+            
+            foreach ($permission as $value) {
+                $this->authorize->addPermissionToGroup($value, $id);
+            }
 
             $this->db->transCommit();
 
@@ -128,13 +133,13 @@ class PermissionController extends BaseController
             return redirect()->back()->with('error', parsingAlert($message));
         }
 
-        $message = 'Permission created successfully!';
+        $message = 'Role created successfully!';
         return redirect()->to($this->route)->with('success', parsingAlert($message));
     }
 
-    public function edit($permission_id)
+    public function edit($role_id)
     {
-        $id = decode_id($permission_id)[0];
+        $id = decode_id($role_id)[0];
 
         $data = [
             'title'         => $this->title,
@@ -142,18 +147,21 @@ class PermissionController extends BaseController
             'header'        => $this->header,
             'sub_header'    => $this->sub_header,
             'route_back'    => base_url($this->route),
-            'data'          => $this->model->find($id)
+            'data'          => $this->authorize->group($id),
+            'permissions'   => $this->authorize->permissions(),
+            'permission'    => $this->authorize->groupPermissions($id),
         ];
 
         return view($this->namespace.'update', $data);
     }
 
-    public function update($permission_id)
+    public function update($role_id)
     {
-        $id = decode_id($permission_id)[0];
+        $id = decode_id($role_id)[0];
 
         $validationRules = [
             'name' => 'required',
+            'description' => 'required',
         ];
 
         if (!$this->validate($validationRules)) {
@@ -166,10 +174,18 @@ class PermissionController extends BaseController
             // Ambil data dari request
             $data = [
                 'name' => $this->request->getPost('name'),
+                'description' => $this->request->getPost('description'),
             ];
 
-            $permissionModel = $this->model;
-            $permissionModel->update($id, $data);
+            $groupModel = $this->model;
+            $groupModel->save($data, $id);
+
+            $permissions = $this->request->getPost('permission');
+            // $this->db->table('auth_groups_permissions')->where('group_id', $id)->delete();
+            $this->db->table('auth_groups_permissions')->where('group_id', $id)->delete();
+            foreach ($permissions as $permission) {
+                $this->authorize->addPermissionToGroup($permission, $id);
+            }
 
             $this->db->transCommit();
 
@@ -180,19 +196,19 @@ class PermissionController extends BaseController
             return redirect()->back()->with('error', parsingAlert($message));
         }
 
-        $message = 'Permission updated successfully!';
+        $message = 'Role updated successfully!';
         return redirect()->to($this->route)->with('success', parsingAlert($message));
     }
 
-    public function destroy($permission_id)
+    public function destroy($role_id)
     {
-        $id = decode_id($permission_id);
+        $id = decode_id($role_id);
 
-        $permissionModel = $this->model;
-        $permission = $permissionModel->find($id);
+        $roleModel = $this->model;
+        $permission = $roleModel->find($id);
         if ($permission) {
             // Hapus permission
-            $permissionModel->delete($id);
+            $roleModel->delete($id);
 
             return $this->response->setJSON([
                 'status'    => true,

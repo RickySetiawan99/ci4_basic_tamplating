@@ -48,6 +48,20 @@ $routes->group('user-management',
             $routes->post('store', 'PermissionController::store');
             $routes->post('update/(:segment)', 'PermissionController::update/$1');
         });
+
+        $routes->group('roles', [
+            'filter'    => 'permission',
+            'namespace' => 'App\Controllers\UserManagement',
+        ], function ($routes) {
+            $routes->get('/', 'RoleController::index');
+            $routes->post('fetchData', 'RoleController::fetchData');
+            $routes->get('create', 'RoleController::create');
+            $routes->get('edit/(:segment)', 'RoleController::edit/$1');
+            $routes->get('destroy/(:segment)', 'RoleController::destroy/$1');
+            
+            $routes->post('store', 'RoleController::store');
+            $routes->post('update/(:segment)', 'RoleController::update/$1');
+        });
     }
 );
 

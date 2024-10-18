@@ -110,6 +110,5 @@
 <?= $this->endSection() ?>
 <?= $this->section('js') ?>
 <script>
-    $('.duallistbox').bootstrapDualListbox();
 </script>
 <?= $this->endSection() ?>

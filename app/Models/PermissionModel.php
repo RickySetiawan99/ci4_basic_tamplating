@@ -2,11 +2,12 @@
 
 namespace App\Models;
 
-use CodeIgniter\Model;
+use Myth\Auth\Models\PermissionModel as ModelsPermissionModel;
 
-class PermissionModel extends Model
+class PermissionModel extends ModelsPermissionModel
 {
-    protected $table = 'auth_permissions';  // Tabel permissions di Myth/Auth
-    protected $primaryKey = 'id';
-    protected $allowedFields = ['name', 'description'];  // Kolom yang bisa diisi
+    protected $validationRules = [
+        'name'        => 'required|max_length[255]|is_unique[auth_permissions.name,id,{id}]', // Modifikasi aturan validasi
+        'description' => 'max_length[255]',
+    ];
 }
