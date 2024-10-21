@@ -62,6 +62,17 @@ $routes->group('user-management',
             $routes->post('store', 'RoleController::store');
             $routes->post('update/(:segment)', 'RoleController::update/$1');
         });
+
+        $routes->group('menus', [
+            'filter' => 'permission', 
+            'namespace' => 'App\Controllers\UserManagement'
+        ], function($routes) {
+            $routes->resource('list', [
+                'controller' => 'MenuController',
+                'except'     => 'new,show',
+            ]);
+            $routes->put('update', 'MenuController::new');
+        });
     }
 );
 

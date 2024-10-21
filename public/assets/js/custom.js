@@ -42,4 +42,25 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // duallistbox
   $(".duallistbox").bootstrapDualListbox();
+
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  var collapseElements = document.querySelectorAll(".collapse");
+
+  collapseElements.forEach(function (collapse) {
+    collapse.addEventListener("show.bs.collapse", function () {
+      var icon =
+        collapse.previousElementSibling.querySelector(".toggle-icon");
+      icon.classList.remove("fa-angle-right");
+      icon.classList.add("fa-angle-down");
+    });
+
+    collapse.addEventListener("hide.bs.collapse", function () {
+      var icon =
+        collapse.previousElementSibling.querySelector(".toggle-icon");
+      icon.classList.remove("fa-angle-down");
+      icon.classList.add("fa-angle-right");
+    });
+  });
 });
