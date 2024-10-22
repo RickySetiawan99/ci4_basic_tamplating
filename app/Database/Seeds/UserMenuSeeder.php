@@ -52,18 +52,41 @@ class UserMenuSeeder extends Seeder
         $this->authorize->createGroup('admin', 'Administrators. The top of the food chain.');
         $this->authorize->createGroup('user', 'User everyday user.');
 
-        // Permission
-        $this->authorize->createPermission('back-office', 'User can access to the administration panel.');
-        $this->authorize->createPermission('manage-user', 'User can create, delete or modify the users.');
-        $this->authorize->createPermission('role-permission', 'User can edit and define permissions for a role.');
-        $this->authorize->createPermission('menu-permission', 'User can create, delete or modify the menu.');
-
+        // // Permission
+        $this->authorize->createPermission('user-read');
+        $this->authorize->createPermission('user-create');
+        $this->authorize->createPermission('user-update');
+        $this->authorize->createPermission('user-delete');
+        $this->authorize->createPermission('menu-read');
+        $this->authorize->createPermission('menu-create');
+        $this->authorize->createPermission('menu-update');
+        $this->authorize->createPermission('menu-delete');
+        $this->authorize->createPermission('permission-read');
+        $this->authorize->createPermission('permission-create');
+        $this->authorize->createPermission('permission-update');
+        $this->authorize->createPermission('permission-delete');
+        $this->authorize->createPermission('role-read');
+        $this->authorize->createPermission('role-create');
+        $this->authorize->createPermission('role-update');
+        $this->authorize->createPermission('role-delete');
+        
         // Assign Permission to role
-        $this->authorize->addPermissionToGroup('back-office', 'admin');
-        $this->authorize->addPermissionToGroup('manage-user', 'admin');
-        $this->authorize->addPermissionToGroup('role-permission', 'admin');
-        $this->authorize->addPermissionToGroup('menu-permission', 'admin');
-        $this->authorize->addPermissionToGroup('back-office', 'user');
+        $this->authorize->addPermissionToGroup('user-read', 'admin');
+        $this->authorize->addPermissionToGroup('user-create', 'admin');
+        $this->authorize->addPermissionToGroup('user-update', 'admin');
+        $this->authorize->addPermissionToGroup('user-delete', 'admin');
+        $this->authorize->addPermissionToGroup('menu-read', 'admin');
+        $this->authorize->addPermissionToGroup('menu-create', 'admin');
+        $this->authorize->addPermissionToGroup('menu-update', 'admin');
+        $this->authorize->addPermissionToGroup('menu-delete', 'admin');
+        $this->authorize->addPermissionToGroup('permission-read', 'admin');
+        $this->authorize->addPermissionToGroup('permission-create', 'admin');
+        $this->authorize->addPermissionToGroup('permission-update', 'admin');
+        $this->authorize->addPermissionToGroup('permission-delete', 'admin');
+        $this->authorize->addPermissionToGroup('role-read', 'admin');
+        $this->authorize->addPermissionToGroup('role-create', 'admin');
+        $this->authorize->addPermissionToGroup('role-update', 'admin');
+        $this->authorize->addPermissionToGroup('role-delete', 'admin');
 
         // Assign Role to user
         $this->authorize->addUserToGroup(1, 'admin');
@@ -71,11 +94,11 @@ class UserMenuSeeder extends Seeder
         $this->authorize->addUserToGroup(2, 'user');
 
         // Assign Permission to user
-        $this->authorize->addPermissionToUser('back-office', 1);
-        $this->authorize->addPermissionToUser('manage-user', 1);
-        $this->authorize->addPermissionToUser('role-permission', 1);
-        $this->authorize->addPermissionToUser('menu-permission', 1);
-        $this->authorize->addPermissionToUser('back-office', 2);
+        // $this->authorize->addPermissionToUser('back-office', 1);
+        // $this->authorize->addPermissionToUser('manage-user', 1);
+        // $this->authorize->addPermissionToUser('role-permission', 1);
+        // $this->authorize->addPermissionToUser('menu-permission', 1);
+        // $this->authorize->addPermissionToUser('back-office', 2);
 
         $this->db->table('menu')->insertBatch([
             [

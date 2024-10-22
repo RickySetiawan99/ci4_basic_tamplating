@@ -17,10 +17,10 @@ class RoleController extends BaseController
     protected $model;
 
     protected static $protectedMethods = [
-        // 'role-read'   => ['index', 'fetchData'],
-        // 'role-create' => ['create', 'store'],
-        // 'role-update' => ['edit', 'update'],
-        // 'role-delete' => ['destroy'],
+        'role-read'   => ['index', 'fetchData'],
+        'role-create' => ['create', 'store'],
+        'role-update' => ['edit', 'update'],
+        'role-delete' => ['destroy'],
     ];
 
     public function __construct()
