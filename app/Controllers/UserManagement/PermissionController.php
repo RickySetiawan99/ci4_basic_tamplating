@@ -17,9 +17,10 @@ class PermissionController extends BaseController
     protected $model;
 
     protected static $protectedMethods = [
-        // 'index',
-        // 'create',
-        // 'store',
+        'permission-read'   => ['index', 'fetchData'],
+        'permission-create' => ['create', 'store'],
+        'permission-update' => ['edit', 'update'],
+        'permission-delete' => ['destroy'],
     ];
 
     public function __construct()

@@ -301,3 +301,21 @@
     display: none;
 }
 /* end custom nestable */
+
+/* start profile page */
+.profile-image {
+    position: relative; /* Agar elemen update-image bisa diposisikan relatif terhadap profile-image */
+    display: flex;
+    justify-content: center; /* Menyusun gambar di tengah */
+    align-items: center; /* Menyusun gambar secara vertikal di tengah */
+}
+
+.profile-pic {
+    width: 100px; /* Atur lebar gambar sesuai kebutuhan */
+    height: 100px; /* Atur tinggi gambar sesuai kebutuhan */
+    border-radius: 50%; /* Membuat gambar menjadi bulat */
+    object-fit: cover; /* Menjaga rasio gambar saat dipangkas */
+    border: 2px solid #fff; /* Tambahkan border putih (opsional) */
+}
+
+/* end profile page */

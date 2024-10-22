@@ -1,5 +1,6 @@
 <?php
 
+use CodeIgniter\CLI\CLI;
 use Myth\Auth\Models\PermissionModel;
 
 if (!function_exists('parsingAlert')) {
@@ -46,5 +47,13 @@ if (!function_exists('hasPermission')) {
 
         // Cek apakah permission yang diminta ada dalam daftar permission user
         return in_array($permission, $userPermissions);
+    }
+}
+
+if (!function_exists('clear_cache')) {
+    function clear_cache()
+    {
+        // Membersihkan cache aplikasi
+        service('cache')->clean();
     }
 }

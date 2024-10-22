@@ -10,7 +10,7 @@
     <div class="container text-center mt-5">
         <h1 class="display-4">Access Denied</h1>
         <p class="lead">You do not have permission to view this page.</p>
-        <a href="/" class="btn btn-primary">Go Back Home</a>
+        <a href="javascript:history.back()" class="btn btn-secondary">Go Back</a>
     </div>
 </body>
 </html>

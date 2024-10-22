@@ -80,6 +80,11 @@ abstract class BaseController extends Controller
 
     public static function requiresPermission($method)
     {
-        return in_array($method, static::$protectedMethods);
+        foreach (static::$protectedMethods as $permission => $methods) {
+            if (in_array($method, $methods)) {
+                return $permission;
+            }
+        }
+        return null;
     }
 }

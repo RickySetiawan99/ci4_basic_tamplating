@@ -19,6 +19,13 @@ class UserController extends BaseController
 
     protected $model;
 
+    protected static $protectedMethods = [
+        'user-read'     => ['index', 'fetchData'],
+        'user-create'   => ['create', 'store'],
+        'user-update'   => ['edit', 'update'],
+        'user-delete'   => ['destroy'],
+    ];
+
     public function __construct()
     {
         $this->model = new $this->modelName;
@@ -266,5 +273,46 @@ class UserController extends BaseController
                 'message'   => 'Failed to delete user'
             ]);
         }
+    }
+
+    public function profile()
+    {
+        if ($this->request->getMethod() === 'POST') {
+            $id = user()->id;
+            $validationRules = [
+                'email'        => "required|valid_email|is_unique[users.email,id,$id]",
+                'username'     => "required|alpha_numeric_space|min_length[3]|is_unique[users.username,id,$id]",
+                'password'     => 'if_exist',
+                'pass_confirm' => 'matches[password]',
+            ];
+
+            if (!$this->validate($validationRules)) {
+                return redirect()->back()->withInput()->with('error', $this->validator->getErrors());
+            }
+
+            $user = new User();
+
+            if ($this->request->getPost('password')) {
+                $user->password = $this->request->getPost('password');
+            }
+
+            $user->email = $this->request->getPost('email');
+            $user->username = $this->request->getPost('username');
+
+            if ($this->model->skipValidation(true)->update(user()->id, $user)) {
+                return redirect()->back()->with('success', 'Profile Updated');
+            }
+
+            return redirect()->back()->withInput()->with('error', 'Profile update failed');
+        }
+
+        $data = [
+            'title'         => $this->title,
+            'route'         => $this->route,
+            'header'        => $this->header,
+            'sub_header'    => $this->sub_header,
+        ];
+
+        return view($this->namespace.'/profile', $data);
     }
 }

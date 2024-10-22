@@ -17,9 +17,10 @@ class RoleController extends BaseController
     protected $model;
 
     protected static $protectedMethods = [
-        // 'index',
-        // 'create',
-        // 'store',
+        // 'role-read'   => ['index', 'fetchData'],
+        // 'role-create' => ['create', 'store'],
+        // 'role-update' => ['edit', 'update'],
+        // 'role-delete' => ['destroy'],
     ];
 
     public function __construct()
@@ -132,6 +133,7 @@ class RoleController extends BaseController
             $message = $e->getMessage();
             return redirect()->back()->with('error', parsingAlert($message));
         }
+        clear_cache();
 
         $message = 'Role created successfully!';
         return redirect()->to($this->route)->with('success', parsingAlert($message));
@@ -195,6 +197,7 @@ class RoleController extends BaseController
             $message = $e->getMessage();
             return redirect()->back()->with('error', parsingAlert($message));
         }
+        clear_cache();
 
         $message = 'Role updated successfully!';
         return redirect()->to($this->route)->with('success', parsingAlert($message));
@@ -210,6 +213,7 @@ class RoleController extends BaseController
             // Hapus permission
             $roleModel->delete($id);
 
+            clear_cache();
             return $this->response->setJSON([
                 'status'    => true,
                 'message'   => 'Permission deleted successfully'

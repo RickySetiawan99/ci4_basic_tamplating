@@ -40,18 +40,13 @@ class PermissionFilter implements FilterInterface
 
          // Cek apakah method memerlukan permission
         if (class_exists($controllerWithNamespace) && method_exists($controllerWithNamespace, 'requiresPermission')) {
-            if ($controllerWithNamespace::requiresPermission($method)) {
-                // Jika memerlukan permission, cek apakah user punya permission
+            $permission = $controllerWithNamespace::requiresPermission($method);
+            if ($permission) {
                 if (!hasPermission($permission)) {
-                    return redirect()->to('/access-denied'); // Atau halaman lain sesuai kebutuhan
+                    return service('response')->setStatusCode(403)->setBody(view('errors/403'));
                 }
             }
         }
-
-        // Cek apakah filter ini ditetapkan untuk controller dan method tertentu
-        // if (!hasPermission($permission)) {
-        //     return redirect()->to('/access-denied'); // Atau halaman lain sesuai kebutuhan
-        // }
     }
 
     public function after(RequestInterface $request, ResponseInterface $response, $arguments = null)

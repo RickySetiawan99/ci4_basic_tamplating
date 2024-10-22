@@ -21,6 +21,13 @@ class MenuController extends BaseController
     protected $menu;
     protected $groupsMenu;
 
+    protected static $protectedMethods = [
+        'menu-read'     => ['index'],
+        'menu-create'   => ['new', 'create'],
+        'menu-update'   => ['edit', 'update'],
+        'menu-delete'   => ['delete'],
+    ];
+
     public function __construct()
     {
         $this->menu = new MenuModel();
