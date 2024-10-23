@@ -5,7 +5,10 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
-$routes->get('/', 'Home::index', ['filter' => 'auth']);
+$routes->group('', ['filter' => 'auth'], function($routes) {
+    $routes->get('/', 'Home::index');
+    $routes->get('/dashboard', 'Home::index');
+});
 
 $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->get('login', 'AuthController::login', ['as' => 'login']);

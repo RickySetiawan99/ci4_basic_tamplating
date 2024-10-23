@@ -58,34 +58,46 @@
     <nav class="sidebar-nav">
         <div class="collapse navbar-collapse w-auto" id="sidenav-collapse-main">
             <ul class="navbar-nav">
-                <?php foreach (menu() as $parent) { ?>
+                <?php foreach (menu() as $parent) { 
+                    // Check if any child is active
+                    $isActiveParent = false;
+                    foreach ($parent->children as $child) {
+                        if (strpos(current_url(), base_url($child->route)) === 0) {
+                            $isActiveParent = true;
+                            break;  // Stop checking further if a child is active
+                        }
+                    }
+                ?>
                     <!-- Parent item -->
                     <li class="nav-item">
                         <a href="<?= count($parent->children) ? '#' : base_url($parent->route) ?>"
-                        class="nav-link <?= current_url() == base_url($parent->route) ? 'active' : '' ?>" 
+                        class="nav-link 
+                            <?php 
+                                // Active if current URL matches parent route or any child is active
+                                if ((!count($parent->children) && strpos(current_url(), base_url($parent->route)) === 0) || $isActiveParent) {
+                                    echo 'active';
+                                }
+                            ?>" 
                         data-bs-toggle="<?= count($parent->children) ? 'collapse' : '' ?>"
                         data-bs-target="#navbar_<?= $parent->id ?>"
                         aria-controls="navbar_<?= $parent->id ?>" 
-                        aria-expanded="<?= in_array(uri_string(), array_column($parent->children, 'route')) ? 'true' : 'false' ?>">
+                        aria-expanded="<?= $isActiveParent ? 'true' : 'false' ?>">
                             <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
                                 <i class="ni ni-tv-2 text-sm opacity-10 <?= $parent->icon ?>"></i>
                             </div>
                             <span class="nav-link-text ms-1"><?= $parent->title ?></span>
-                            <!-- <?php if (count($parent->children)) { ?>
-                                <i class="right fas fa-angle-right toggle-icon ms-1"></i>
-                            <?php } ?> -->
                         </a>
 
                         <?php if (count($parent->children)) { ?>
                             <!-- Child items -->
-                            <div class="collapse <?= in_array(uri_string(), array_column($parent->children, 'route')) ? 'show' : '' ?>" id="navbar_<?= $parent->id ?>">
+                            <div class="collapse <?= $isActiveParent ? 'show' : '' ?>" id="navbar_<?= $parent->id ?>">
                                 <ul class="navbar-nav px-3">
                                     <?php foreach ($parent->children as $child) { ?>
                                         <li class="nav-item">
                                             <a href="<?= base_url($child->route) ?>"
-                                            class="nav-link py-2 <?= current_url() == base_url($child->route) ? 'active' : '' ?>">
+                                            class="nav-link py-2 <?= strpos(current_url(), base_url($child->route)) === 0 ? 'active' : '' ?>">
                                                 <div class="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                                                    <i class="fa fa-key text-sm opacity-10 <?= $child->icon ?>"></i>
+                                                    <i class="text-sm opacity-10 <?= $child->icon ?>"></i>
                                                 </div>
                                                 <span class="nav-link-text ms-1"><?= $child->title ?></span>
                                             </a>
