@@ -64,21 +64,24 @@
         var selector = '#dataTable';
         var url = '<?= base_url($route.'/fetchData') ?>';
         var filters = {
-            name: '#nameFilter',   // Input filter untuk name
-            email: '#emailFilter'  // Input filter untuk email
+            name: '#nameFilter',    
+            email: '#emailFilter'   
         };
-        var columns = [
-            { "data": "no" },
-            { "data": "username" },
-            { "data": "email" },
-            { "data": "created_at" },
-            { "data": "action" }
+        var columns = [  
+            { data: "no", orderable: true },
+            { data: "username", orderable: true },
+            { data: "email", orderable: true },
+            { data: "created_at", orderable: true },
+            { data: "action", orderable: false }
         ];
-        var table = initSimpleDataTable(selector, url, filters, columns);
+        var additionalOptions = {
+            order: [[1, 'asc']]
+        };
 
-        // Event untuk filter
+        var table = initSimpleDataTable(selector, url, filters, columns, additionalOptions);
+
         $('#filterBtn').click(function() {
-            table.draw();  // Memuat ulang DataTables dengan filter
+            table.draw();
         });
     });
 </script>

@@ -45,35 +45,59 @@ class UserController extends BaseController
 
     public function fetchData()
     {
-        $request = service('request');
-        $userModel = $this->model;
-
-        // Ambil parameter dari inputan filter (misal: nama, email)
-        $name       = $request->getPost('name');
-        $email      = $request->getPost('email');
-        $start      = (int) $request->getPost('start');
-        $length     = (int) $request->getPost('length');
-        $draw       = $request->getPost('draw');
-
-        $users = $userModel->select('id, username, email, created_at');
-
-        $totalRecords = $users->countAllResults(false);
-
-        if (!empty($name)) {
-            $users->like('username', $name);
+        $request    = service('request');
+        $userModel  = $this->model;
+        $getData    = $userModel->select('id, username, email, created_at');
+        $where      = [];
+        $join       = [];
+        $leftjoin   = [];
+        
+        // filter
+        $filters = [
+            'username'  => [$request->getPost('name'), 'like'],
+            'email'     => [$request->getPost('email'), 'like'],
+        ];
+        foreach ($filters as $column => $value) {
+            $param = $value[0];       // Nilai filter
+            $operator = $value[1];    // Operator filter
+            
+            if (!empty($param)) {
+                if ($operator === 'like') {
+                    $getData->like($column, $param); // Gunakan 'like' untuk pencarian
+                } else {
+                    $getData->where($column, $operator, $param); // Gunakan operator lainnya
+                }
+            }
         }
 
-        if (!empty($email)) {
-            $users->like('email', $email);
+        foreach ($where as $condition) {
+            $getData->where($condition[0] . ' ' . $condition[1], $condition[2]);
+        }
+        foreach ($join as $joinCondition) {
+            $type = $joinCondition[2] ?? 'INNER';
+            $getData->join($joinCondition[0], $joinCondition[1], $type);
+        }
+        foreach ($leftjoin as $leftJoinCondition) {
+            $getData->leftJoin($leftJoinCondition[0], $leftJoinCondition[1]);
         }
 
-        $totalFiltered = $users->countAllResults(false);
+        // Ambil parameter pengurutan
+        $orderColumnIndex   = $request->getPost('order')[0]['column']; // Indeks kolom yang diurutkan
+        $orderDirection     = $request->getPost('order')[0]['dir']; // 'asc' atau 'desc'
+        $columns            = ['id', 'username', 'email', 'created_at']; // Sesuaikan dengan nama kolom di database
+        $orderColumn        = $columns[$orderColumnIndex]; // Nama kolom yang sesuai
+        // Tambahkan pengurutan
+        $getData->orderBy($orderColumn, $orderDirection);
 
-        $data = $users->limit($length, $start)->get()->getResultArray();
+        $totalRecords       = $getData->countAllResults(false);
+        $totalFiltered      = $getData->countAllResults(false);
+        $start              = (int) $request->getPost('start');
+        $length             = (int) $request->getPost('length');
+        $draw               = $request->getPost('draw');
+        $data               = $getData->limit($length, $start)->get()->getResultArray();
 
         $formattedData = [];
         foreach ($data as $key => $value) {
-            // Tambahkan nomor urut (index + 1 + $start) untuk memperhitungkan pagination
             $btnEdit    = '<a href="' . site_url($this->route.'/edit/' . encode_id($value['id'])) . '" class="btn btn-md btn-primary mx-1" data-bs-toggle="tooltip" title="Edit"><i class="fas fa-pencil-alt"></i></a>';
             $btnDelete  = '<a href="javascript:;" data-route="' . site_url($this->route.'/destroy/' . encode_id($value['id'])) . '" class="btn btn-delete btn-md btn-danger mx-1" data-bs-toggle="tooltip" title="Delete" data-container="body" data-animation="true"><i class="fas fa-trash"></i></a>';
             
