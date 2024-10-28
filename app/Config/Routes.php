@@ -18,6 +18,10 @@ $routes->group('', ['namespace' => 'App\Controllers'], function ($routes) {
     $routes->get('logout', 'AuthController::logout');
 });
 
+$routes->group('global', ['namespace' => 'App\Controllers'], function ($routes) {
+    $routes->get('basic-select-two/(:segment)/(:segment)/(:segment)', 'GlobalController::basicSelectTwo/$1/$2/$3', ['as' => 'global.basic_select_two']);
+});
+
 $routes->group('user-management', 
     [
         'namespace' => 'App\Controllers\UserManagement', 

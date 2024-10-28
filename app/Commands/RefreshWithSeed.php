@@ -62,7 +62,7 @@ class RefreshWithSeed extends BaseCommand
 
         // Run db:seed DatabaseSeeder
         CLI::write('Seeding the database...', 'yellow');
-        $this->call('db:seed', ['TestSeeder']);
+        $this->call('db:seed', ['DatabaseSeeder']);
         
         CLI::write('Migrations refreshed and seeders run successfully!', 'green');
     }
